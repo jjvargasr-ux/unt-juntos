@@ -1,10 +1,9 @@
 /* UNT Juntos — prototipo local de interfaz.
    Para sincronización real entre usuarios se requiere backend y base de datos. */
-const ZONAS = [
-  "El Porvenir", "La Esperanza", "Florencia de Mora", "Alto Trujillo",
-  "Trujillo Centro", "Víctor Larco", "Huanchaco", "Moche", "Laredo", "Salaverry",
-  "Urb. Primavera, Trujillo", "Urb. California, Víctor Larco", "Urb. Monserrate, Trujillo",
-  "Urb. San Andrés, Trujillo", "Urb. El Golf, Víctor Larco", "Urb. Santa María, Trujillo"
+const DISTRITOS = [
+  "Alto Trujillo", "El Porvenir", "Florencia de Mora", "Huanchaco",
+  "La Esperanza", "Laredo", "Moche", "Poroto", "Salaverry", "Simbal",
+  "Trujillo", "Víctor Larco Herrera"
 ];
 const PUNTOS = [
   "Puerta principal UNT (Av. Juan Pablo II)", "Puerta de Ingeniería",
@@ -50,10 +49,30 @@ function selectedTime(select, input) {
   if (select.value === CUSTOM) return formatTime(input.value);
   return select.value;
 }
+function fillDistrictSelect(select, selected = "") {
+  select.innerHTML = `<option value="">Selecciona un distrito</option>` +
+    DISTRITOS.map(d => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
+  select.value = DISTRITOS.includes(selected) ? selected : "";
+}
 function fillZones() {
-  const dl = $("#zonas-sugeridas");
-  dl.innerHTML = [...new Set(ZONAS)].map(z => `<option value="${escapeHtml(z)}"></option>`).join("");
+  ["#zona", "#c-zona", "#edit-zona", "#f-zona"].forEach(id => fillDistrictSelect($(id)));
   $("#puntos-sugeridos").innerHTML = PUNTOS.map(p => `<option value="${escapeHtml(p)}"></option>`).join("");
+}
+function normalizeDistrict(value = "") {
+  const v = String(value).toLowerCase();
+  if (DISTRITOS.includes(value)) return value;
+  if (v.includes("laredo")) return "Laredo";
+  if (v.includes("esperanza")) return "La Esperanza";
+  if (v.includes("porvenir")) return "El Porvenir";
+  if (v.includes("florencia")) return "Florencia de Mora";
+  if (v.includes("huanchaco")) return "Huanchaco";
+  if (v.includes("moche")) return "Moche";
+  if (v.includes("salaverry")) return "Salaverry";
+  if (v.includes("alto trujillo")) return "Alto Trujillo";
+  if (v.includes("víctor larco") || v.includes("victor larco") || v.includes("golf") || v.includes("california")) return "Víctor Larco Herrera";
+  if (v.includes("poroto")) return "Poroto";
+  if (v.includes("simbal")) return "Simbal";
+  return "Trujillo";
 }
 function initials(n) { return (n || "?").trim().charAt(0).toUpperCase(); }
 function colorFor(n) { let h = 0; for (const c of n) h = (h * 31 + c.charCodeAt(0)) >>> 0; return COLORS[h % COLORS.length]; }
@@ -65,10 +84,10 @@ function toast(msg) { const t=$("#toast"); t.textContent=msg; t.classList.add("s
 function seedGroups() {
   const samples = [
     ["Laredo", "7:00 a. m.", "Plaza de Armas de Laredo", 4, ["María", "José"]],
-    ["Urb. Primavera, Trujillo", "7:00 a. m.", "Parque Primavera", 4, ["Ana", "Luis", "Rosa"]],
+    ["Trujillo", "7:00 a. m.", "Parque Primavera", 4, ["Ana", "Luis", "Rosa"]],
     ["La Esperanza", "8:00 a. m.", "Paradero Av. América Sur", 5, ["Diego", "Carla"]],
     ["Moche", "6:00 a. m.", "Parque principal de Moche", 4, ["Marco"]],
-    ["Trujillo Centro", "9:00 a. m.", "Plaza de Armas de Trujillo", 4, ["Sofía", "Pedro"]]
+    ["Trujillo", "9:00 a. m.", "Plaza de Armas de Trujillo", 4, ["Sofía", "Pedro"]]
   ];
   return samples.map((x,i)=>({id:i+1,zona:x[0],hora:x[1],punto:x[2],cupos:x[3],miembros:x[4],color:COLORS[i],creado:false}));
 }
@@ -76,6 +95,8 @@ let state = {
   user: store.get("user", null), groups: store.get("groups", null) || seedGroups(),
   joined: store.get("joined", []), chats: store.get("chats", {}), current: null
 };
+if (state.user) state.user.zona = normalizeDistrict(state.user.zona);
+state.groups.forEach(g => { g.zona = normalizeDistrict(g.zona); });
 function save() { store.set("user",state.user); store.set("groups",state.groups); store.set("joined",state.joined); store.set("chats",state.chats); }
 function show(screen) {
   $$(".screen").forEach(s => s.hidden = s.dataset.screen !== screen);
@@ -92,21 +113,19 @@ function setupTimeFields() {
 }
 fillZones(); setupTimeFields();
 
-/* Inicio: vista de prueba local. La verificación por correo requiere backend. */
+/* Inicio de sesión con correo institucional. */
 $("#login-form").addEventListener("submit", e => {
   e.preventDefault();
   const email=$("#email").value.trim().toLowerCase(), zona=$("#zona").value.trim(), hora=selectedTime($("#hora"),$("#hora-custom")), err=$("#login-error");
   if (!/^[^\s@]+@unitru\.edu\.pe$/.test(email)) return err.textContent="Usa tu correo institucional @unitru.edu.pe";
-  if (!zona) return err.textContent="Escribe tu urbanización o sector de residencia";
+  if (!zona) return err.textContent="Selecciona tu distrito";
   if (!hora) return err.textContent="Selecciona o escribe tu hora aproximada de salida";
   err.textContent="";
   state.user={email,nombre:nameFromEmail(email),zona,hora}; save(); enterApp();
-  toast("Vista de demostración: correo aún no verificado");
+
 });
 function enterApp() {
-  const zones=[...new Set(state.groups.map(g=>g.zona).concat(state.user.zona))];
-  $("#f-zona").innerHTML=zones.map(z=>`<option>${escapeHtml(z)}</option>`).join("");
-  $("#f-zona").value=state.user.zona;
+  fillDistrictSelect($("#f-zona"), state.user.zona);
   $("#f-hora").innerHTML=`<option>Todas</option>`+HORAS.map(h=>`<option>${h}</option>`).join("")+`<option>${CUSTOM}</option>`;
   $("#f-hora").value="Todas";
   $("#hello").textContent=`Hola, ${state.user.nombre} 👋`;
@@ -120,7 +139,7 @@ function groupCard(g) {
     <h3>${escapeHtml(g.zona)} <span class="tag">${escapeHtml(g.hora)}</span>${joined?'<span class="tag mine">Tu grupo</span>':isNight(g.hora)?'<span class="tag night">Nocturno</span>':""}</h3>
     <div class="meta"><span>📍 Punto de encuentro: <b>${escapeHtml(g.punto)}</b></span>
     <span>👥 ${g.miembros.length} integrantes de ${g.cupos}</span><span>🪑 ${libres} ${libres===1?"cupo disponible":"cupos disponibles"}</span>
-    <span>🕒 Salida aproximada: <b>${escapeHtml(g.hora)}</b></span><span>🏘️ Zona: <b>${escapeHtml(g.zona)}</b></span></div>
+    <span>🕒 Salida aproximada: <b>${escapeHtml(g.hora)}</b></span><span>📍 Distrito: <b>${escapeHtml(g.zona)}</b></span></div>
     <div class="group-foot"><div class="seats">${seats}</div>${action}</div></article>`;
 }
 function renderList() {
@@ -154,8 +173,8 @@ $("#btn-back").addEventListener("click",()=>{renderList();show("buscar");});
 $("#btn-salir").addEventListener("click",()=>{const g=state.groups.find(x=>x.id===state.current);if(!g)return;const i=g.miembros.lastIndexOf(state.user.nombre);if(i>-1)g.miembros.splice(i,1);state.joined=state.joined.filter(x=>x!==g.id);if(g.creado&&!g.miembros.length)state.groups=state.groups.filter(x=>x.id!==g.id);save();renderList();show("buscar");toast("Saliste del grupo");});
 function renderMis(){const mine=state.groups.filter(g=>state.joined.includes(g.id));$("#mis-lista").innerHTML=mine.length?mine.map(groupCard).join(""):'<div class="empty card"><b>Todavía no te uniste a ningún grupo</b>Busca compañeros en la pestaña Buscar.</div>';}
 function renderPerfil(){const u=state.user;$("#perfil-avatar").textContent=initials(u.nombre);$("#perfil-avatar").style.background=colorFor(u.nombre);$("#perfil-nombre").textContent=u.nombre;$("#perfil-correo").textContent=u.email;$("#perfil-zona").textContent=u.zona;$("#perfil-hora").textContent=u.hora;}
-$("#btn-editar-perfil").addEventListener("click",()=>{ $("#edit-zona").value=state.user.zona; bindCustomTime($("#edit-hora"),$("#edit-hora-custom"),state.user.hora); openSheet("perfil-edit"); });
-$("#perfil-edit-form").addEventListener("submit",e=>{e.preventDefault();const zona=$("#edit-zona").value.trim(),hora=selectedTime($("#edit-hora"),$("#edit-hora-custom"));if(!zona||!hora)return toast("Completa la zona y la hora");state.user.zona=zona;state.user.hora=hora;save();closeSheet("perfil-edit");renderPerfil();const zones=[...new Set(state.groups.map(g=>g.zona).concat(zona))];$("#f-zona").innerHTML=zones.map(z=>`<option>${escapeHtml(z)}</option>`).join("");$("#f-zona").value=zona;renderList();toast("Perfil actualizado");});
+$("#btn-editar-perfil").addEventListener("click",()=>{ fillDistrictSelect($("#edit-zona"), state.user.zona); bindCustomTime($("#edit-hora"),$("#edit-hora-custom"),state.user.hora); openSheet("perfil-edit"); });
+$("#perfil-edit-form").addEventListener("submit",e=>{e.preventDefault();const zona=$("#edit-zona").value,hora=selectedTime($("#edit-hora"),$("#edit-hora-custom"));if(!zona||!hora)return toast("Selecciona tu distrito y la hora");state.user.zona=zona;state.user.hora=hora;save();closeSheet("perfil-edit");renderPerfil();fillDistrictSelect($("#f-zona"), zona);renderList();toast("Perfil actualizado");});
 $("#btn-editar-grupo").addEventListener("click",()=>{const g=state.groups.find(x=>x.id===state.current);if(!g)return;bindCustomTime($("#edit-g-hora"),$("#edit-g-hora-custom"),g.hora);$("#edit-g-punto").value=g.punto;openSheet("grupo-edit");});
 $("#grupo-edit-form").addEventListener("submit",e=>{e.preventDefault();const g=state.groups.find(x=>x.id===state.current);if(!g)return;const hora=selectedTime($("#edit-g-hora"),$("#edit-g-hora-custom")),punto=$("#edit-g-punto").value.trim();if(!hora||!punto)return toast("Completa la hora y el punto de encuentro");g.hora=hora;g.punto=punto;save();closeSheet("grupo-edit");openGroup(g.id,false);toast("Coordinación actualizada");});
 $("#btn-logout").addEventListener("click",()=>{state.user=null;save();$("#login-form").reset();setupTimeFields();show("login");});
@@ -168,8 +187,8 @@ function sendMsg(text){if(!text.trim())return;(state.chats[state.current]||=[]).
 $("#btn-chat").addEventListener("click",()=>{renderChat();openSheet("chat");});
 $("#quick").addEventListener("click",e=>{const b=e.target.closest("button");if(b)sendMsg(b.textContent);});
 $("#composer").addEventListener("submit",e=>{e.preventDefault();sendMsg($("#msg").value);$("#msg").value="";});
-function openCrear(){ $("#c-zona").value=$("#f-zona").value||state.user.zona;bindCustomTime($("#c-hora"),$("#c-hora-custom"),state.user.hora);$("#c-punto").value="";openSheet("crear"); }
+function openCrear(){ fillDistrictSelect($("#c-zona"), $("#f-zona").value||state.user.zona);bindCustomTime($("#c-hora"),$("#c-hora-custom"),state.user.hora);$("#c-punto").value="";openSheet("crear"); }
 $("#btn-crear").addEventListener("click",openCrear);
-$("#crear-form").addEventListener("submit",e=>{e.preventDefault();const zona=$("#c-zona").value.trim(),hora=selectedTime($("#c-hora"),$("#c-hora-custom")),punto=$("#c-punto").value.trim();if(!zona||!hora||!punto)return toast("Completa zona, hora y punto de encuentro");const id=Math.max(0,...state.groups.map(g=>g.id))+1;const g={id,zona,hora,punto,cupos:+$("#c-cupos").value,miembros:[],color:COLORS[id%COLORS.length],creado:true};state.groups.push(g);save();closeSheet("crear");const zones=[...new Set(state.groups.map(x=>x.zona))];$("#f-zona").innerHTML=zones.map(z=>`<option>${escapeHtml(z)}</option>`).join("");$("#f-zona").value=zona;$("#f-hora").value="Todas";joinGroup(id);toast("Grupo creado");});
+$("#crear-form").addEventListener("submit",e=>{e.preventDefault();const zona=$("#c-zona").value,hora=selectedTime($("#c-hora"),$("#c-hora-custom")),punto=$("#c-punto").value.trim();if(!zona||!hora||!punto)return toast("Selecciona el distrito, la hora y el punto de encuentro");const id=Math.max(0,...state.groups.map(g=>g.id))+1;const g={id,zona,hora,punto,cupos:+$("#c-cupos").value,miembros:[],color:COLORS[id%COLORS.length],creado:true};state.groups.push(g);save();closeSheet("crear");fillDistrictSelect($("#f-zona"), zona);$("#f-hora").value="Todas";joinGroup(id);toast("Grupo creado");});
 $("#btn-ayuda").addEventListener("click",()=>openSheet("ayuda"));
 if(state.user)enterApp();else show("login");

@@ -204,3 +204,72 @@ button { cursor: pointer; }
 .help-content p { margin: 8px 0 14px; }
 .help-content b { color: var(--ink); }
 #crear-form, #perfil-edit-form, #grupo-edit-form { overflow-y: auto; }
+
+/* ---------- Identidad visual renovada UNT Juntos ---------- */
+:root {
+  --blue: #2457C5;
+  --blue-d: #173B8F;
+  --blue-l: #EAF1FF;
+  --orange: #FF914D;
+  --yellow: #FFD166;
+  --green: #13A89E;
+  --green-l: #E2F8F4;
+  --purple: #7657D8;
+  --ink: #17233F;
+  --muted: #687795;
+  --line: #E2EAF5;
+  --bg: #F3F7FD;
+  --card: #FFFFFF;
+  --shadow: 0 10px 28px rgba(29, 61, 117, .09);
+}
+body { background: radial-gradient(circle at 12% 8%, #D8F4F0 0, transparent 28%), linear-gradient(145deg, #DCE8FF, #F4F7FC 55%, #FFE9D9); }
+.app { background: linear-gradient(180deg, #F8FBFF, #F2F7FD); }
+#screen-login { background: linear-gradient(155deg, #173B8F 0%, #2457C5 48%, #20AFA8 100%); }
+.login-hero { padding-top: 38px; padding-bottom: 30px; }
+.login-hero::before { width: 190px; height: 190px; background: #FFB66D; opacity: .28; top: -90px; right: -70px; }
+.login-hero::after { width: 120px; height: 120px; background: #8DE3D7; opacity: .22; top: 135px; left: -55px; }
+.logo { width: 96px; height: 96px; border-radius: 30px; background: rgba(255,255,255,.17); border: 1px solid rgba(255,255,255,.32); box-shadow: 0 12px 30px rgba(9,31,83,.2); backdrop-filter: blur(8px); }
+.logo img { width: 82px; height: 82px; filter: drop-shadow(0 5px 8px rgba(12,35,82,.16)); }
+.login-hero h1 { letter-spacing: -.9px; text-shadow: 0 3px 12px rgba(10,32,82,.18); }
+#login-form { border: 1px solid rgba(255,255,255,.72); box-shadow: 0 16px 42px rgba(22,49,104,.13); }
+.intro-card { border: 1px solid #E8EEF8; box-shadow: 0 8px 24px rgba(29,61,117,.07); }
+.intro-card h3 { color: #1D3973; font-size: 16px; }
+.how-card { padding: 19px; }
+.section-kicker { color: #168E8A; font-size: 10px; font-weight: 800; letter-spacing: 1.35px; margin-bottom: 6px; }
+.intro-card .lead-copy { color: #465979; font-size: 13px; line-height: 1.65; }
+.travel-options { display: grid; gap: 9px; margin: 14px 0; }
+.travel-option { display: flex; align-items: flex-start; gap: 11px; padding: 11px; border: 1px solid #E8EEF8; border-radius: 14px; background: linear-gradient(120deg, #FBFDFF, #F5F9FF); }
+.travel-icon { display: grid; place-items: center; width: 38px; height: 38px; flex: none; border-radius: 12px; font-size: 19px; background: #E7F1FF; }
+.travel-icon.bus { background: #E2F8F4; }.travel-icon.car { background: #FFF0E5; }.travel-icon.group-icon { background: #F0EBFF; }
+.travel-option b { display: block; color: #213D77; font-size: 12px; margin: 1px 0 3px; }
+.intro-card .travel-option p { margin: 0; color: #697895; font-size: 11px; line-height: 1.5; }
+.coordination { border-radius: 14px; padding: 13px 14px; background: #EEF5FF; color: #425779; font-size: 12px; line-height: 1.55; }
+.coordination b { color: #1D3973; }
+.coordination ol { margin: 7px 0 0; padding-left: 19px; }
+.coordination li { padding: 2px 0; }
+.intro-card .disclaimer, .disclaimer { margin: 12px 0 0; padding: 11px 12px; border-radius: 12px; background: #FFF5E9; color: #76512C; font-size: 11px; line-height: 1.55; }
+.btn-primary { background: linear-gradient(105deg, #2457C5, #2879C9); }
+.icon-btn { background: linear-gradient(135deg, #FF9B59, #F47B48); }
+.chip-zona { background: linear-gradient(120deg, #7657D8, #9272EA); }
+.chip-hora { background: linear-gradient(120deg, #159F99, #21B8A7); }
+.group { border: 1px solid #EAF0F8; }
+.tabbar button.active { color: #2457C5; }
+.tabbar button.active svg { background: #EAF1FF; }
+
+/* Página de privacidad */
+.privacy-page { min-height: 100vh; padding: 22px 14px; }
+.privacy-app { min-height: 100vh; max-width: 680px; margin: 0 auto; overflow: visible; border-radius: 28px; box-shadow: 0 24px 70px rgba(25,57,112,.13); }
+.privacy-hero { position: relative; padding: 24px 25px 32px; color: #fff; border-radius: 28px 28px 0 0; background: linear-gradient(135deg, #173B8F, #2457C5 58%, #18A99F); overflow: hidden; }
+.privacy-hero::after { content: ""; position: absolute; width: 220px; height: 220px; border-radius: 50%; right: -75px; top: -100px; background: rgba(255,255,255,.1); }
+.privacy-hero .back-link { position: relative; z-index: 1; color: #fff; text-decoration: none; font-size: 13px; font-weight: 700; }
+.privacy-hero img { display: block; position: relative; z-index: 1; width: 72px; height: 72px; margin: 25px 0 8px; }
+.privacy-hero p { position: relative; z-index: 1; margin: 0 0 5px; color: #BFEDE8; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; }
+.privacy-hero h1 { position: relative; z-index: 1; margin: 0; font-size: clamp(26px, 5vw, 34px); letter-spacing: -.7px; }
+.privacy-hero span { position: relative; z-index: 1; display: block; margin-top: 7px; color: rgba(255,255,255,.82); font-size: 13px; }
+.privacy-content { margin: 18px; padding: 22px; border: 1px solid #E8EEF8; }
+.privacy-content h2 { margin: 19px 0 7px; color: #1D3973; font-size: 15px; }
+.privacy-content h2:first-child { margin-top: 0; }
+.privacy-content p, .privacy-content li { color: #657491; font-size: 13px; line-height: 1.7; }
+.privacy-content ul { padding-left: 20px; }
+.privacy-footer { padding: 0 20px 24px; text-align: center; color: #8190AA; font-size: 11px; }
+@media (min-width: 600px) { .privacy-app { height: auto; } }

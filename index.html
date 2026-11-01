@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%231E4FD8'/%3E%3Ccircle cx='24' cy='26' r='8' fill='%23FFB020'/%3E%3Ccircle cx='40' cy='26' r='8' fill='%23fff'/%3E%3Cpath d='M12 50c2-9 8-13 12-13s10 4 12 13M28 50c2-9 8-13 12-13s10 4 12 13' stroke='%23fff' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
 </head>
 <body>
   <div class="app" id="app">
@@ -18,9 +18,7 @@
     <!-- ============ PANTALLA 1 · INICIO ============ -->
     <section class="screen" id="screen-login" data-screen="login">
       <div class="login-hero">
-        <div class="logo" aria-hidden="true">
-          <svg viewBox="0 0 64 64"><circle cx="24" cy="24" r="9" fill="#FFB020"/><circle cx="41" cy="24" r="9" fill="#fff"/><path d="M10 52c2-10 8-15 14-15s12 5 14 15M27 52c2-10 8-15 14-15s12 5 14 15" stroke="#fff" stroke-width="4.5" fill="none" stroke-linecap="round"/></svg>
-        </div>
+        <div class="logo" aria-hidden="true"><img src="logo.svg" alt="" width="76" height="76"></div>
         <h1>UNT Juntos</h1>
         <p>Viaja con tu comunidad UNT</p>
       </div>
@@ -30,14 +28,12 @@
           <span>Correo institucional</span>
           <input type="email" id="email" placeholder="usuario@unitru.edu.pe" autocomplete="email" required>
         </label>
-        <p class="privacy-note">No solicitamos la contraseña de tu correo institucional. En esta versión de demostración el correo solo identifica el perfil; la verificación real por código requiere conectar un servicio de autenticación.</p>
 
         <p class="hint">Para mostrarte grupos cercanos:</p>
         <label class="field">
-          <span>¿En qué zona vives?</span>
-          <small>Escribe el nombre de tu urbanización o sector de residencia.</small>
-          <input id="zona" list="zonas-sugeridas" placeholder="Urb. Primavera, Trujillo" autocomplete="address-level3" required>
-          <datalist id="zonas-sugeridas"></datalist>
+          <span>¿En qué distrito vives?</span>
+          <small>Selecciona el distrito donde vives.</small>
+          <select id="zona" required></select>
         </label>
         <label class="field">
           <span>¿A qué hora sales de casa?</span>
@@ -50,11 +46,18 @@
         <button class="btn btn-primary" type="submit">Continuar y buscar grupos</button>
         <p class="fine">Utiliza tu correo <b>@unitru.edu.pe</b>. No se te pedirá su contraseña.</p>
       </form>
-      <section class="card intro-card">
+      <section class="card intro-card how-card">
+        <div class="section-kicker">MUÉVETE EN COMUNIDAD</div>
         <h3>¿Cómo funciona UNT Juntos?</h3>
-        <p>Encuentra estudiantes de la UNT que viven cerca de ti y tienen horarios similares para organizar sus traslados juntos.</p>
-        <p>La aplicación conecta estudiantes para coordinar horarios y puntos de encuentro. No ofrece transporte ni realiza viajes por cuenta propia.</p>
-        <p><b>Modalidad:</b> coordinación entre integrantes del grupo.</p>
+        <p class="lead-copy">Encuentra estudiantes de la UNT que viven cerca de ti y tienen horarios similares para organizar sus traslados juntos.</p>
+        <div class="travel-options">
+          <article class="travel-option"><span class="travel-icon walk">🚶</span><div><b>Caminar juntos</b><p>Queden en un lugar público y recorran juntos el camino hacia la universidad o hasta un paradero.</p></div></article>
+          <article class="travel-option"><span class="travel-icon bus">🚌</span><div><b>Usar la misma ruta de transporte público</b><p>Coordinen qué línea o paradero les conviene. Cada estudiante paga su propio pasaje.</p></div></article>
+          <article class="travel-option"><span class="travel-icon car">🚕</span><div><b>Compartir un taxi o movilidad</b><p>Si todos están de acuerdo, pueden organizarlo por su cuenta, confirmar el costo y dividirlo antes de viajar.</p></div></article>
+          <article class="travel-option"><span class="travel-icon group-icon">🚗</span><div><b>Viajar en vehículo de un integrante</b><p>Un estudiante que tenga vehículo puede ofrecer voluntariamente los asientos disponibles y acordar previamente las condiciones.</p></div></article>
+        </div>
+        <div class="coordination"><b>¿Cómo se coordinan?</b><ol><li>Busca grupos de tu distrito y revisa la hora, integrantes y cupos.</li><li>Únete al grupo y confirma en el chat si asistirás.</li><li>Acuerden un punto público concreto y una hora exacta.</li><li>Confirmen la modalidad, el costo si corresponde y quiénes participarán.</li><li>Avísense si hay retrasos o cambios. Cada integrante es responsable de cumplir lo acordado.</li></ol></div>
+        <p class="disclaimer"><b>Importante:</b> UNT Juntos conecta estudiantes y facilita la coordinación. No proporciona vehículos, conductores, pasajes ni servicios de taxi; tampoco cobra ni gestiona pagos. Las modalidades dependen de los acuerdos voluntarios entre los integrantes.</p>
       </section>
       <section class="card intro-card">
         <h3>Tu privacidad es importante</h3>
@@ -77,7 +80,7 @@
       </header>
 
       <div class="filters">
-        <label class="chip chip-zona"><span>Zona</span><select id="f-zona"></select></label>
+        <label class="chip chip-zona"><span>Distrito</span><select id="f-zona"></select></label>
         <label class="chip chip-hora"><span>Hora</span><select id="f-hora"></select></label>
       </div>
 
@@ -98,10 +101,10 @@
         <div class="avatar big" id="perfil-avatar"></div>
         <p class="profile-name" id="perfil-nombre"></p>
         <p class="profile-mail" id="perfil-correo"></p>
-        <div class="kv"><span>Zona</span><b id="perfil-zona"></b></div>
+        <div class="kv"><span>Distrito</span><b id="perfil-zona"></b></div>
         <div class="kv"><span>Hora habitual</span><b id="perfil-hora"></b></div>
       </div>
-      <button class="btn btn-primary" id="btn-editar-perfil">Editar zona y hora</button>
+      <button class="btn btn-primary" id="btn-editar-perfil">Editar distrito y hora</button>
       <button class="btn btn-ghost" id="btn-ayuda">¿Cómo funcionan los viajes?</button>
       <button class="btn btn-ghost" id="btn-logout">Cerrar sesión</button>
     </section>
@@ -185,7 +188,7 @@
         <button class="icon-btn ghost" id="crear-close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
       </header>
       <form class="form" id="crear-form">
-        <label class="field"><span>¿En qué zona se reunirán?</span><input id="c-zona" list="zonas-sugeridas" placeholder="Urb. Primavera, Trujillo" required></label>
+        <label class="field"><span>¿En qué distrito se reunirán?</span><select id="c-zona" required></select></label>
         <label class="field"><span>Hora de salida</span><select id="c-hora"></select><input id="c-hora-custom" type="time" hidden aria-label="Elegir otra hora"></label>
         <label class="field"><span>Punto de encuentro personalizado</span><input id="c-punto" list="puntos-sugeridos" placeholder="Ej. Parque Primavera" required><datalist id="puntos-sugeridos"></datalist><small>Puedes escribir un lugar específico de tu zona.</small></label>
         <label class="field"><span>Cupos</span><select id="c-cupos"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
@@ -197,7 +200,7 @@
     <section class="sheet" id="perfil-edit" hidden aria-label="Editar perfil">
       <header class="sheet-head"><h3>Editar tu información</h3><button class="icon-btn ghost" id="perfil-edit-close" aria-label="Cerrar">×</button></header>
       <form class="form" id="perfil-edit-form">
-        <label class="field"><span>¿En qué zona vives?</span><small>Escribe tu urbanización o sector.</small><input id="edit-zona" list="zonas-sugeridas" required></label>
+        <label class="field"><span>¿En qué distrito vives?</span><small>Selecciona tu distrito.</small><select id="edit-zona" required></select></label>
         <label class="field"><span>¿A qué hora sales de casa?</span><select id="edit-hora" required></select><input id="edit-hora-custom" type="time" hidden></label>
         <button class="btn btn-primary" type="submit">Guardar cambios</button>
       </form>
@@ -217,10 +220,12 @@
     <section class="sheet" id="ayuda" hidden aria-label="Ayuda sobre viajes">
       <header class="sheet-head"><h3>¿Cómo funcionan los viajes?</h3><button class="icon-btn ghost" id="ayuda-close" aria-label="Cerrar">×</button></header>
       <div class="help-content">
-        <p><b>1. Encuentra compañeros.</b> Filtra grupos por tu urbanización o sector y una hora cercana a tu salida.</p>
-        <p><b>2. Únete a un grupo.</b> Revisa sus integrantes, cupos y punto de encuentro antes de unirte.</p>
-        <p><b>3. Coordina.</b> Confirma con los integrantes la hora y el punto exacto. Si hay un error, puedes actualizar la información del grupo.</p>
-        <p><b>4. Responsabilidades.</b> Cada integrante debe respetar los acuerdos, avisar si no asistirá y priorizar su seguridad. UNT Juntos solo facilita la coordinación entre estudiantes.</p>
+        <p><b>1. Encuentra compañeros.</b> Filtra grupos por distrito y hora de salida. Revisa integrantes, cupos y punto de encuentro.</p>
+        <p><b>2. Elijan cómo trasladarse.</b> Pueden caminar juntos, dirigirse al mismo paradero y usar transporte público por separado, o acordar voluntariamente compartir un taxi o vehículo particular. En esos últimos casos, confirmen previamente disponibilidad, costo, distribución del pago y condiciones.</p>
+        <p><b>3. Definan el encuentro.</b> Acuerden un lugar público fácil de reconocer, la hora exacta y cuánto tiempo esperarán. Confirmen el plan en el chat del grupo.</p>
+        <p><b>4. Mantengan la comunicación.</b> Avisen si están en camino, llegaron, se retrasarán o ya no viajarán. Si cambia el punto o la hora, actualicen los datos del grupo.</p>
+        <p><b>5. Responsabilidades y seguridad.</b> Cada integrante debe cumplir los acuerdos, respetar decisiones voluntarias, confirmar cualquier gasto antes de aceptarlo y priorizar su seguridad. No compartan direcciones exactas de vivienda ni información sensible.</p>
+        <p class="disclaimer"><b>Recuerda:</b> UNT Juntos facilita el contacto y la coordinación; no brinda transporte, conductores ni gestiona pagos.</p>
       </div>
     </section>
 

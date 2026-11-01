@@ -189,3 +189,18 @@ button { cursor: pointer; }
 .toast { position: fixed; left: 50%; bottom: 96px; transform: translate(-50%, 20px); background: var(--ink); color: #fff; padding: 11px 18px; border-radius: 14px; font-size: 14px; font-weight: 600; opacity: 0; pointer-events: none; transition: .25s; z-index: 20; white-space: nowrap; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 @media (min-width: 600px) { .toast { position: absolute; } }
+
+/* ---------- Mejoras de registro, privacidad y edición ---------- */
+.field small { color: var(--muted); font-size: 12px; line-height: 1.45; }
+.privacy-note { margin: 0; padding: 12px 14px; border-radius: 12px; background: #EEF4FF; color: #34446B; font-size: 12px; line-height: 1.55; }
+.intro-card { margin-top: 12px; padding: 16px; }
+.intro-card h3 { margin: 0 0 8px; font-size: 15px; }
+.intro-card p { margin: 7px 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.intro-card a { color: var(--blue); font-size: 12px; font-weight: 700; }
+#hora-custom, #c-hora-custom, #edit-hora-custom, #edit-g-hora-custom { height: 46px; border: 1.5px solid var(--line); border-radius: 12px; padding: 0 12px; background: #fff; width: 100%; }
+.group .tag { white-space: nowrap; }
+.group h3 { flex-wrap: wrap; }
+.help-content { overflow-y: auto; padding: 0 2px 12px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+.help-content p { margin: 8px 0 14px; }
+.help-content b { color: var(--ink); }
+#crear-form, #perfil-edit-form, #grupo-edit-form { overflow-y: auto; }

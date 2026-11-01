@@ -30,25 +30,38 @@
           <span>Correo institucional</span>
           <input type="email" id="email" placeholder="usuario@unitru.edu.pe" autocomplete="email" required>
         </label>
-        <label class="field">
-          <span>Contraseña</span>
-          <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" required>
-        </label>
+        <p class="privacy-note">No solicitamos la contraseña de tu correo institucional. En esta versión de demostración el correo solo identifica el perfil; la verificación real por código requiere conectar un servicio de autenticación.</p>
 
         <p class="hint">Para mostrarte grupos cercanos:</p>
         <label class="field">
-          <span>Mi zona de residencia</span>
-          <select id="zona" required></select>
+          <span>¿En qué zona vives?</span>
+          <small>Escribe el nombre de tu urbanización o sector de residencia.</small>
+          <input id="zona" list="zonas-sugeridas" placeholder="Urb. Primavera, Trujillo" autocomplete="address-level3" required>
+          <datalist id="zonas-sugeridas"></datalist>
         </label>
         <label class="field">
-          <span>Hora de salida habitual</span>
+          <span>¿A qué hora sales de casa?</span>
+          <small>Indica la hora aproximada en la que sales de tu vivienda para dirigirte a la UNT.</small>
           <select id="hora" required></select>
+          <input id="hora-custom" type="time" hidden aria-label="Elegir otra hora">
         </label>
 
         <p class="error" id="login-error" role="alert"></p>
-        <button class="btn btn-primary" type="submit">Ingresar y buscar grupos</button>
-        <p class="fine">Solo con correo <b>@unitru.edu.pe</b></p>
+        <button class="btn btn-primary" type="submit">Continuar y buscar grupos</button>
+        <p class="fine">Utiliza tu correo <b>@unitru.edu.pe</b>. No se te pedirá su contraseña.</p>
       </form>
+      <section class="card intro-card">
+        <h3>¿Cómo funciona UNT Juntos?</h3>
+        <p>Encuentra estudiantes de la UNT que viven cerca de ti y tienen horarios similares para organizar sus traslados juntos.</p>
+        <p>La aplicación conecta estudiantes para coordinar horarios y puntos de encuentro. No ofrece transporte ni realiza viajes por cuenta propia.</p>
+        <p><b>Modalidad:</b> coordinación entre integrantes del grupo.</p>
+      </section>
+      <section class="card intro-card">
+        <h3>Tu privacidad es importante</h3>
+        <p>El correo institucional sirve para identificar a miembros de la comunidad UNT. La zona, hora y datos de grupo se utilizan para encontrar coincidencias y coordinar traslados.</p>
+        <p>Esta versión de prueba guarda datos localmente en el navegador. No ingreses información sensible.</p>
+        <a href="privacidad.html" target="_blank" rel="noopener">Consultar política de privacidad</a>
+      </section>
     </section>
 
     <!-- ============ PANTALLA 2 · BUSCAR ============ -->
@@ -88,6 +101,8 @@
         <div class="kv"><span>Zona</span><b id="perfil-zona"></b></div>
         <div class="kv"><span>Hora habitual</span><b id="perfil-hora"></b></div>
       </div>
+      <button class="btn btn-primary" id="btn-editar-perfil">Editar zona y hora</button>
+      <button class="btn btn-ghost" id="btn-ayuda">¿Cómo funcionan los viajes?</button>
       <button class="btn btn-ghost" id="btn-logout">Cerrar sesión</button>
     </section>
 
@@ -131,6 +146,7 @@
       <div class="members" id="g-members"></div>
 
       <button class="btn btn-primary" id="btn-chat">Abrir chat del grupo</button>
+      <button class="btn btn-ghost" id="btn-editar-grupo">Cambiar hora o punto de encuentro</button>
       <button class="btn btn-link" id="btn-salir">Salir del grupo</button>
     </section>
 
@@ -169,12 +185,43 @@
         <button class="icon-btn ghost" id="crear-close" aria-label="Cerrar"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
       </header>
       <form class="form" id="crear-form">
-        <label class="field"><span>Zona de destino</span><select id="c-zona"></select></label>
-        <label class="field"><span>Hora de salida</span><select id="c-hora"></select></label>
-        <label class="field"><span>Punto de encuentro</span><select id="c-punto"></select></label>
+        <label class="field"><span>¿En qué zona se reunirán?</span><input id="c-zona" list="zonas-sugeridas" placeholder="Urb. Primavera, Trujillo" required></label>
+        <label class="field"><span>Hora de salida</span><select id="c-hora"></select><input id="c-hora-custom" type="time" hidden aria-label="Elegir otra hora"></label>
+        <label class="field"><span>Punto de encuentro personalizado</span><input id="c-punto" list="puntos-sugeridos" placeholder="Ej. Parque Primavera" required><datalist id="puntos-sugeridos"></datalist><small>Puedes escribir un lugar específico de tu zona.</small></label>
         <label class="field"><span>Cupos</span><select id="c-cupos"><option>3</option><option selected>4</option><option>5</option><option>6</option></select></label>
         <button class="btn btn-primary" type="submit">Crear grupo</button>
       </form>
+    </section>
+
+    <div class="sheet-backdrop" id="perfil-edit-backdrop" hidden></div>
+    <section class="sheet" id="perfil-edit" hidden aria-label="Editar perfil">
+      <header class="sheet-head"><h3>Editar tu información</h3><button class="icon-btn ghost" id="perfil-edit-close" aria-label="Cerrar">×</button></header>
+      <form class="form" id="perfil-edit-form">
+        <label class="field"><span>¿En qué zona vives?</span><small>Escribe tu urbanización o sector.</small><input id="edit-zona" list="zonas-sugeridas" required></label>
+        <label class="field"><span>¿A qué hora sales de casa?</span><select id="edit-hora" required></select><input id="edit-hora-custom" type="time" hidden></label>
+        <button class="btn btn-primary" type="submit">Guardar cambios</button>
+      </form>
+    </section>
+
+    <div class="sheet-backdrop" id="grupo-edit-backdrop" hidden></div>
+    <section class="sheet" id="grupo-edit" hidden aria-label="Editar grupo">
+      <header class="sheet-head"><h3>Actualizar coordinación</h3><button class="icon-btn ghost" id="grupo-edit-close" aria-label="Cerrar">×</button></header>
+      <form class="form" id="grupo-edit-form">
+        <label class="field"><span>Hora de salida</span><select id="edit-g-hora" required></select><input id="edit-g-hora-custom" type="time" hidden></label>
+        <label class="field"><span>Punto de encuentro</span><input id="edit-g-punto" list="puntos-sugeridos" required></label>
+        <button class="btn btn-primary" type="submit">Guardar cambios del grupo</button>
+      </form>
+    </section>
+
+    <div class="sheet-backdrop" id="ayuda-backdrop" hidden></div>
+    <section class="sheet" id="ayuda" hidden aria-label="Ayuda sobre viajes">
+      <header class="sheet-head"><h3>¿Cómo funcionan los viajes?</h3><button class="icon-btn ghost" id="ayuda-close" aria-label="Cerrar">×</button></header>
+      <div class="help-content">
+        <p><b>1. Encuentra compañeros.</b> Filtra grupos por tu urbanización o sector y una hora cercana a tu salida.</p>
+        <p><b>2. Únete a un grupo.</b> Revisa sus integrantes, cupos y punto de encuentro antes de unirte.</p>
+        <p><b>3. Coordina.</b> Confirma con los integrantes la hora y el punto exacto. Si hay un error, puedes actualizar la información del grupo.</p>
+        <p><b>4. Responsabilidades.</b> Cada integrante debe respetar los acuerdos, avisar si no asistirá y priorizar su seguridad. UNT Juntos solo facilita la coordinación entre estudiantes.</p>
+      </div>
     </section>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
